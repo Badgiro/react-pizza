@@ -13,6 +13,7 @@ function App() {
       <div className="content">
         <div className="container">
           <Categories />
+          {/*  */}
           <Sort />
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">
