@@ -1,24 +1,43 @@
 import { useState } from "react";
 
-const PizzaBlock = ({ title, price, pizzaImg, sizes }) => {
-    const [selectedSize, setSelectedSize] = useState();
+const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
+  const [selectedSize, setSelectedSize] = useState(0);
+  const [selectedType, setSelectedType] = useState(0);
+  const typeNames = ["Традиционное", "Тонкое"];
   return (
     <div className="pizza-block">
-      <img className="pizza-block__image" src={pizzaImg} alt="Pizza" />
+      <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
       <h4 className="pizza-block__title">{title}</h4>
-      <div className="pizza-block__selector">
+      <div
+        className="pizza-block__selector"
+        style={{ background: "lightGray" }}
+      >
         <ul>
-          <li className="active">тонкое</li>
-          <li>традиционное</li>
+          {types.map((type) => {
+            return (
+              <li
+                onClick={() => setSelectedType(type)}
+                className={selectedType === type ? "active" : ""}
+                key={type}
+              >
+                {" "}
+                {typeNames[type]}
+              </li>
+            );
+          })}
         </ul>
         <ul>
-            {
-                sizes.map((size, i)=> {
-                    return <li key={i} >{size} см.</li>
-                })
-            }
-            
-         
+          {sizes.map((size, i) => {
+            return (
+              <li
+                onClick={() => setSelectedSize(i)}
+                className={selectedSize === i ? "active" : ""}
+                key={i}
+              >
+                {size} см.
+              </li>
+            );
+          })}
         </ul>
       </div>
       <div className="pizza-block__bottom">

@@ -6,7 +6,7 @@ const Categories = () => {
     setActiveCategory(index);
   };
   const pizzaCategories = [
-    'Все',
+    "Все",
     "Мясные",
     "Вегетарианская",
     "Гриль",
@@ -27,7 +27,6 @@ const Categories = () => {
               {category}
             </li>
           ))}
-          <li className="active">Все</li>
         </ul>
       </div>
     </div>
