@@ -17,7 +17,13 @@ const Categories = () => {
   return (
     <div className="content__top">
       <div className="categories">
-        <ul>
+        <ul
+          style={{
+            display: "flex",
+
+            flexWrap: "wrap",
+          }}
+        >
           {pizzaCategories.map((category, index) => (
             <li
               onClick={() => onClickCategory(index)}

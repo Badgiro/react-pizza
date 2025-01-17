@@ -29,7 +29,12 @@ const Sort = () => {
       {open && (
         <div
           className="sort__popup"
-          style={{ position: "absolute", top: "40px", left: "120px", boxShadow:` 10px 10px 5px 1px rgba(226,227,240,1)` }}
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "120px",
+            boxShadow: ` 10px 10px 5px 1px rgba(226,227,240,1)`,
+          }}
         >
           <ul>
             {sortValues.map((value, i) => {

@@ -32,6 +32,7 @@ const Home = () => {
     };
 
     fetchData();
+    window.scrollTo(0, 0);
   }, []);
   return (
     <div className="content__top">
