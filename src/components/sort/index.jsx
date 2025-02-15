@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-const Sort = () => {
-  const [sortType, setSortType] = useState(0);
-  const [open, setOpen] = useState(false);
-  const sortValues = ["популярности", "цене", "алфавиту"];
-  const selectedSortClick = (i) => {
-    setSortType(i);
-    setOpen(false);
-  };
+const Sort = ({ sortBy, onClickSort }) => {
+  const [open, setOpen] = useState(false)
+  const sortValues = [
+    { name: 'популярности(DESC)', sort: 'rating' },
+    { name: 'популярности(ASC)', sort: '-rating' },
+    { name: 'цене(DESC)', sort: 'price' },
+    { name: 'цене(ASC)', sort: '-price' },
+    { name: 'алфавиту(DESC)', sort: 'title' },
+    { name: 'алфавиту(ASC)', sort: '-title' },
+  ]
+
   return (
     <div className="sort">
       <div className="sort__label">
@@ -24,16 +27,17 @@ const Sort = () => {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{sortValues[sortType]}</span>
+        <span onClick={() => setOpen(!open)}>{sortBy.name}</span>
       </div>
       {open && (
         <div
           className="sort__popup"
           style={{
-            position: "absolute",
-            top: "10px",
-            left: "120px",
-            boxShadow: ` 10px 10px 5px 1px rgba(226,227,240,1)`,
+            position: 'absolute',
+            top: '10px',
+            left: '120px',
+            maxWidth: '250px',
+            width: '100%',
           }}
         >
           <ul>
@@ -41,18 +45,18 @@ const Sort = () => {
               return (
                 <li
                   key={i}
-                  onClick={() => selectedSortClick(i)}
-                  className={sortType === i ? "active" : ""}
+                  onClick={() => onClickSort(sortValues[i]) || setOpen(false)}
+                  className={sortBy.sort === value.sort ? 'active' : ''}
                 >
-                  {value}
+                  {value.name}
                 </li>
-              );
+              )
             })}
           </ul>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Sort;
+export default Sort
