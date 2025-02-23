@@ -3,8 +3,10 @@ import Categories from "../../components/categories";
 import Sort from "../../components/sort";
 import PizzaBlock from "../../components/pizzaBlock";
 import Skeleton from "../../components/pizzaBlock/Skeleton";
+import Pagination from "../../components/pagination";
 
-const Home = () => {
+
+const Home = ({search}) => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);
@@ -12,13 +14,15 @@ const Home = () => {
     name: "популярности(ASC)",
     sort: "rating",
   });
+  const searchValue = search? `&search=${search}` : '';
+  const category =`${
+    categoryId > 0 ?`category=${categoryId}` : ""
+  }`
 
   const getItems = async () => {
     try {
       const response = await fetch(
-        ` https://6758135e60576a194d0eb1a9.mockapi.io/items?category=${
-          categoryId > 0 ? categoryId : ""
-        }&sortBy=${
+        ` https://6758135e60576a194d0eb1a9.mockapi.io/items?${category}${searchValue}&sortBy=${
           sortBy.sort.includes("-")
             ? sortBy.sort.replace("-", "") || sortBy.sort + "&order=asc"
             : sortBy.sort + "&order=desc"
@@ -45,7 +49,7 @@ const Home = () => {
 
     fetchData();
     window.scrollTo(0, 0);
-  }, [categoryId, sortBy]);
+  }, [categoryId, sortBy, search]);
   return (
     <div className="content__top">
       <div className="content">
@@ -63,7 +67,9 @@ const Home = () => {
               : items?.map((item) => <PizzaBlock key={item.id} {...item} />)}
           </div>
         </div>
+        <Pagination/>
       </div>
+   
     </div>
   );
 };

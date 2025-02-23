@@ -1,6 +1,7 @@
 .root {
   max-width: 300px;
   width: 100%;
+  position: relative;
 }
 .searchInput {
   width: 100%;
@@ -8,4 +9,17 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 10px;
+}
+.searchIcon {
+  max-width: 18px;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 8px;
+  right: 15px;
+  cursor: pointer;
+
+  &:hover {
+    color: aliceblue;
+  }
 }
