@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import margarita from '../../assets/img/margarita.jpg'
 
 const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
   const [selectedSize, setSelectedSize] = useState(0)
@@ -8,7 +9,7 @@ const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems:'center' }}>
       {' '}
       <div className="pizza-block">
-        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+        <img className="pizza-block__image" src={margarita} alt="Pizza" />
         <h4 className="pizza-block__title">{title}</h4>
         <div
           className="pizza-block__selector"
