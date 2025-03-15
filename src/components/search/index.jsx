@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import {SearchContext} from '../../App'
 import styles from './style.module.css'
 import Xmark from '../../assets/img/xmark-solid.svg'
 
-const Search = ({ search, setSearch }) => {
+const Search = () => {
+  const {search, setSearch}= useContext(SearchContext)
   return (
     <div className={styles.root}>
       <input
