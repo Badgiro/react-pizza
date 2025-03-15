@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound'
 
 export const SearchContext = createContext()
 
+
 function App() {
   const [search, setSearch] = useState('')
   console.log(search)
