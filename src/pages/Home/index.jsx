@@ -1,21 +1,25 @@
 import { useEffect, useState, useContext } from 'react'
+import { setCategoryId } from '../../redux/slices/filterSlice'
 import Categories from '../../components/categories'
 import Sort from '../../components/sort'
 import PizzaBlock from '../../components/pizzaBlock'
 import Skeleton from '../../components/pizzaBlock/Skeleton'
 import Pagination from '../../components/pagination'
 import { SearchContext } from '../../App'
+import { useSelector, useDispatch } from 'react-redux'
 
 const Home = () => {
-  const {search} = useContext(SearchContext)
+  const { categoryId, sort: sortBy } = useSelector((state) => state.filters)
+  const dispatch = useDispatch()
+  const { search } = useContext(SearchContext)
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [categoryId, setCategoryId] = useState(0)
+  // const [categoryId, setCategoryId] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const [sortBy, setSortBy] = useState({
-    name: 'популярности(ASC)',
-    sort: 'rating',
-  })
+
+  const onChangeCategory = (id) => {
+    dispatch(setCategoryId(id))
+  }
   const searchValue = search ? `&search=${search}` : ''
   const category = `${categoryId > 0 ? `category=${categoryId}` : ''}`
 
@@ -56,9 +60,9 @@ const Home = () => {
         <div className="container">
           <Categories
             categoryId={categoryId}
-            onClickCategory={(i) => setCategoryId(i)}
+            onClickCategory={(i) => onChangeCategory(i)}
           />
-          <Sort sortBy={sortBy} onClickSort={(i) => setSortBy(i)} />
+          <Sort />
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">
             {/* Проверяем, если данные загружены */}
