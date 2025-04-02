@@ -1,6 +1,8 @@
+
 import { useEffect, useState, useContext } from 'react'
 import { setCategoryId } from '../../redux/slices/filterSlice'
 import Categories from '../../components/categories'
+import axios from 'axios'
 import Sort from '../../components/sort'
 import PizzaBlock from '../../components/pizzaBlock'
 import Skeleton from '../../components/pizzaBlock/Skeleton'
@@ -14,29 +16,31 @@ const Home = () => {
   const { search } = useContext(SearchContext)
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  // const [categoryId, setCategoryId] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id))
   }
-  const searchValue = search ? `&search=${search}` : ''
-  const category = `${categoryId > 0 ? `category=${categoryId}` : ''}`
+  console.log(currentPage)
+ 
+
 
   const getItems = async () => {
     try {
-      const response = await fetch(
-        ` https://6758135e60576a194d0eb1a9.mockapi.io/items?${category}&limit=4&page=${currentPage}${searchValue}&sortBy=${
-          sortBy.sort.includes('-')
-            ? sortBy.sort.replace('-', '') || sortBy.sort + '&order=asc'
-            : sortBy.sort + '&order=desc'
-        }`
+      const response = await axios.get(
+        `https://6758135e60576a194d0eb1a9.mockapi.io/items`,
+        {
+          params: {
+            category: categoryId > 0 ? categoryId : '',
+            limit: 4,
+            page: currentPage,
+            search: search || '',
+            sortBy: sortBy.sort.includes('-') ? sortBy.sort.replace('-', '') : sortBy.sort,
+            order: sortBy.sort.includes('-') ? 'asc' : 'desc',
+          },
+        }
       )
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      const data = await response.json()
-      return data // API возвращает массив данных
+      return response.data // axios автоматически извлекает данные из ответа
     } catch (error) {
       console.error('Failed to fetch items:', error)
       return [] // В случае ошибки возвращаем пустой массив
