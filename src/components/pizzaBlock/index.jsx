@@ -1,12 +1,36 @@
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { addItem } from '../../redux/slices/cartSlice'
 import margarita from '../../assets/img/margarita.jpg'
 
 const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
   const [selectedSize, setSelectedSize] = useState(0)
   const [selectedType, setSelectedType] = useState(0)
   const typeNames = ['Традиционное', 'Тонкое']
+  const dispatch = useDispatch()
+  const { items } = useSelector((state) => {
+    return state.cart
+  })
+  const onClickAdd = () => {
+    dispatch(
+      addItem({
+        title,
+        price,
+        size: sizes[selectedSize],
+        type: types[selectedType],
+      })
+    )
+  }
+  console.log(sizes)
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems:'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       {' '}
       <div className="pizza-block">
         <img className="pizza-block__image" src={margarita} alt="Pizza" />
