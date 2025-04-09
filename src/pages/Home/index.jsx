@@ -23,7 +23,7 @@ const Home = () => {
     currentPage,
   } = useSelector((state) => state.filters)
   const dispatch = useDispatch()
-  const { search } = useContext(SearchContext)
+  const { search, setSearch } = useContext(SearchContext)
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
@@ -37,6 +37,7 @@ const Home = () => {
     dispatch(setCategoryId(id))
   }
 
+  console.log(search)
   const getItems = useCallback(async () => {
     try {
       const response = await axios.get(
@@ -59,7 +60,7 @@ const Home = () => {
       console.error('Failed to fetch items:', error)
       return []
     }
-  }, [categoryId, currentPage, search, sortBy.sort])
+  }, [categoryId, currentPage, sortBy.sort])
 
   useEffect(() => {
     if (isMounted.current) {
@@ -80,13 +81,13 @@ const Home = () => {
         const data = await getItems()
         setItems(data) // Устанавливаем данные в состояние
         setIsLoading(false) // Устанавливаем флаг загрузки в false
+        isSearch.current = true // Сбрасываем флаг поиска  ... потом могут быть проблемы из за этой хуйни
       }
-      // isSearch.current = true // Сбрасываем флаг поиска  ... потом могут быть проблемы из за этой хуйни
     }
 
     fetchData()
     window.scrollTo(0, 0)
-  }, [getItems, search, isSearch])
+  }, [getItems, search])
 
   useEffect(() => {
     if (window.location.search) {

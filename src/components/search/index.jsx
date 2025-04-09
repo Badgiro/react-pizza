@@ -13,7 +13,7 @@ const Search = () => {
     debounce((str) => {
       setSearch(str)
     }, 500),
-    []
+    [search, setSearch, value]
   )
   const onchangeInput = (e) => {
     setValue(e.target.value)
