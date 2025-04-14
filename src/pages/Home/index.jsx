@@ -13,23 +13,25 @@ import PizzaBlock from '../../components/pizzaBlock'
 import Skeleton from '../../components/pizzaBlock/Skeleton'
 import Pagination from '../../components/pagination'
 import { sortValues } from '../../components/sort/constants'
-import { SearchContext } from '../../App'
+
 import { useSelector, useDispatch } from 'react-redux'
 
 const Home = () => {
   const {
     categoryId,
     sort: sortBy,
+    search,
     currentPage,
   } = useSelector((state) => state.filters)
   const dispatch = useDispatch()
-  const { search, setSearch } = useContext(SearchContext)
+
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
-  const isSearch = useRef(false) // Флаг для отслеживания поиска
+  // Флаг для отслеживания поиска
   const isMounted = useRef(false) // Флаг для отслеживания монтирования компонента
-
+  const isSearch = useRef(false) // Флаг для отслеживания поиска
+  console.log(categoryId)
   const onChangePAge = (number) => {
     dispatch(setCurrentPage(number))
   }
@@ -37,9 +39,9 @@ const Home = () => {
     dispatch(setCategoryId(id))
   }
 
-  console.log(search)
   const getItems = useCallback(async () => {
     try {
+      console.log(search)
       const response = await axios.get(
         `https://6758135e60576a194d0eb1a9.mockapi.io/items`,
         {
@@ -47,7 +49,7 @@ const Home = () => {
             category: categoryId > 0 ? categoryId : '',
             limit: 4,
             page: currentPage,
-            search: search || '',
+            title: search || '',
             sortBy: sortBy.sort.includes('-')
               ? sortBy.sort.replace('-', '')
               : sortBy.sort,
@@ -55,39 +57,46 @@ const Home = () => {
           },
         }
       )
+
       return response.data
     } catch (error) {
       console.error('Failed to fetch items:', error)
       return []
     }
-  }, [categoryId, currentPage, sortBy.sort])
+  }, [categoryId, currentPage, sortBy.sort, search])
 
   useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
         sortBy: sortBy.sort,
         categoryId,
+        title: search || '', // добавляем search (undefined не попадёт в URL)
         currentPage,
       })
       navigate(`?${queryString}`) // Обновляем URL с параметрами
     }
     isMounted.current = true // Устанавливаем флаг монтирования в true
-  }, [categoryId, currentPage, sortBy.sort, dispatch, navigate])
+  }, [categoryId, currentPage, sortBy.sort, dispatch, search, navigate])
 
   useEffect(() => {
     setIsLoading(true) // Устанавливаем флаг загрузки в true
     const fetchData = async () => {
-      if (isSearch) {
-        const data = await getItems()
-        setItems(data) // Устанавливаем данные в состояние
-        setIsLoading(false) // Устанавливаем флаг загрузки в false
-        isSearch.current = true // Сбрасываем флаг поиска  ... потом могут быть проблемы из за этой хуйни
-      }
-    }
+      const data = await getItems()
 
-    fetchData()
+      setItems(data) // Устанавливаем данные в состояние
+      setIsLoading(false) // Устанавливаем флаг загрузки в false
+    }
+    if (!isSearch.current) {
+      fetchData()
+      isSearch.current = true // Устаннавливаем флаг поиска в true
+    } else {
+      isSearch.current = false // Сбрасываем флаг поиска после первого рендера
+    }
+    isSearch.current = false
+
+    // Сбрасываем флаг поиска после первого рендера
     window.scrollTo(0, 0)
-  }, [getItems, search])
+  }, [getItems, search, categoryId, currentPage, sortBy.sort])
 
   useEffect(() => {
     if (window.location.search) {
@@ -101,7 +110,7 @@ const Home = () => {
         })
       )
     }
-  }, [categoryId, currentPage, sortBy.sort, dispatch])
+  }, [categoryId, currentPage, search, sortBy.sort, dispatch])
 
   return (
     <div className="content__top">

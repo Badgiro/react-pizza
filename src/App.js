@@ -8,21 +8,16 @@ import NotFound from './pages/NotFound'
 
 export const SearchContext = createContext()
 
-
 function App() {
-  const [search, setSearch] = useState('')
-  console.log(search)
   return (
     <div className="wrapper">
-      <SearchContext.Provider value={{ search, setSearch }}>
-        <Header search={search} setSearch={setSearch} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="cart" element={<Cart />} />
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="cart" element={<Cart />} />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </SearchContext.Provider>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </div>
   )
 }

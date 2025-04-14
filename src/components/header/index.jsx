@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Search from '../search'
 import { useSelector } from 'react-redux'
 
-const Header = ({ search, setSearch }) => {
+const Header = () => {
   const { items, totalPrice } = useSelector((state) => {
     return state.cart
   })
@@ -31,7 +31,7 @@ const Header = ({ search, setSearch }) => {
           </div>
         </Link>
 
-        <Search search={search} setSearch={setSearch} />
+        <Search />
         <div style={{ marginRight: '5%' }} className="header__cart">
           <Link to="cart" className="button button--cart">
             <span>{totalPrice} р</span>

@@ -1,5 +1,6 @@
-import { useContext, useState, useCallback, useRef } from 'react'
-import { SearchContext } from '../../App'
+import { useState, useRef, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { setSearch } from '../../redux/slices/filterSlice'
 import debounce from 'lodash.debounce'
 import styles from './style.module.css'
 import Xmark from '../../assets/img/xmark-solid.svg'
@@ -7,40 +8,43 @@ import Xmark from '../../assets/img/xmark-solid.svg'
 const Search = () => {
   const [value, setValue] = useState('')
   const inputRef = useRef(null)
-  const { search, setSearch } = useContext(SearchContext)
+  const dispatch = useDispatch()
 
-  const updateSearchValue = useCallback(
+  // Мемоизируем debounce один раз при монтировании
+  const debouncedSearch = useCallback(
     debounce((str) => {
-      setSearch(str)
+      console.log('Searching:', str)
+      dispatch(setSearch(str))
     }, 500),
-    [search, setSearch, value]
+    [dispatch] // Зависимости для useCallback
   )
-  const onchangeInput = (e) => {
+
+  const onChangeInput = (e) => {
     setValue(e.target.value)
-    updateSearchValue(e.target.value)
+    debouncedSearch(e.target.value)
   }
 
   const onClickXmark = () => {
-    setSearch('')
+    debouncedSearch.cancel() // Отменяем отложенный вызов
+    dispatch(setSearch(''))
     setValue('')
-    inputRef.current.focus()
+    inputRef.current?.focus()
   }
 
   return (
     <div className={styles.root}>
       <input
         ref={inputRef}
-        onChange={onchangeInput}
+        onChange={onChangeInput}
         value={value}
         className={styles.searchInput}
-        placeholder="введите название пиццы
-  "
+        placeholder="Введите название пиццы"
         type="text"
       />
       {value && (
         <img
           src={Xmark}
-          onClick={() => onClickXmark()}
+          onClick={onClickXmark}
           alt="Close"
           className={styles.searchIcon}
         />
