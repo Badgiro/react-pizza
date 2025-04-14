@@ -4,10 +4,12 @@ import {
   setCurrentPage,
   setFilters,
 } from '../../redux/slices/filterSlice'
+import { setItems, fetchPizzas } from '../../redux/slices/pizzasSlice'
+
 import { useNavigate } from 'react-router-dom'
 import qs from 'qs'
 import Categories from '../../components/categories'
-import axios from 'axios'
+
 import Sort from '../../components/sort'
 import PizzaBlock from '../../components/pizzaBlock'
 import Skeleton from '../../components/pizzaBlock/Skeleton'
@@ -24,8 +26,9 @@ const Home = () => {
     currentPage,
   } = useSelector((state) => state.filters)
   const dispatch = useDispatch()
+  const { items } = useSelector((state) => state.pizza)
+  console.log(items)
 
-  const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
   // Флаг для отслеживания поиска
@@ -38,32 +41,6 @@ const Home = () => {
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id))
   }
-
-  const getItems = useCallback(async () => {
-    try {
-      console.log(search)
-      const response = await axios.get(
-        `https://6758135e60576a194d0eb1a9.mockapi.io/items`,
-        {
-          params: {
-            category: categoryId > 0 ? categoryId : '',
-            limit: 4,
-            page: currentPage,
-            title: search || '',
-            sortBy: sortBy.sort.includes('-')
-              ? sortBy.sort.replace('-', '')
-              : sortBy.sort,
-            order: sortBy.sort.includes('-') ? 'asc' : 'desc',
-          },
-        }
-      )
-
-      return response.data
-    } catch (error) {
-      console.error('Failed to fetch items:', error)
-      return []
-    }
-  }, [categoryId, currentPage, sortBy.sort, search])
 
   useEffect(() => {
     if (isMounted.current) {
@@ -80,15 +57,20 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoading(true) // Устанавливаем флаг загрузки в true
-    const fetchData = async () => {
-      const data = await getItems()
 
-      setItems(data) // Устанавливаем данные в состояние
-      setIsLoading(false) // Устанавливаем флаг загрузки в false
-    }
     if (!isSearch.current) {
-      fetchData()
+      const res = dispatch(
+        fetchPizzas({
+          categoryId,
+          currentPage,
+          sortBy: sortBy.sort,
+          search,
+        }) // Устанавливаем загруженные пиццы в Redux
+      )
+      dispatch(setItems(res.payload))
+
       isSearch.current = true // Устаннавливаем флаг поиска в true
+      setIsLoading(false) // Устанавливаем флаг загрузки в false
     } else {
       isSearch.current = false // Сбрасываем флаг поиска после первого рендера
     }
@@ -96,7 +78,7 @@ const Home = () => {
 
     // Сбрасываем флаг поиска после первого рендера
     window.scrollTo(0, 0)
-  }, [getItems, search, categoryId, currentPage, sortBy.sort])
+  }, [search, categoryId, dispatch, currentPage, sortBy.sort])
 
   useEffect(() => {
     if (window.location.search) {
