@@ -5,6 +5,8 @@ import './scss/app.scss'
 import Home from './pages/Home'
 import Cart from './pages/Cart'
 import NotFound from './pages/NotFound'
+import Pizza from './pages/Pizza'
+import MainLayout from './layouts/MainLayout'
 
 export const SearchContext = createContext()
 
@@ -13,10 +15,14 @@ function App() {
     <div className="wrapper">
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="cart" element={<Cart />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route path="" element={<Home />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="pizza/:id" element={<Pizza />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
 
-        <Route path="*" element={<NotFound />} />
+        
       </Routes>
     </div>
   )

@@ -36,6 +36,9 @@ export const filterSlice = createSlice({
   },
 })
 
+export const selectFilter = (state) => state.filters // Селектор для получения состояния фильтров
+export const selectSort = (state) => state.filters.sort // Селектор для получения состояния сортировки
+
 export const { setCategoryId, setSort, setCurrentPage, setSearch, setFilters } =
   filterSlice.actions
 

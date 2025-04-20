@@ -53,7 +53,7 @@ export const cartSlice = createSlice({
 })
 
 export const selectCart = (state) => state.cart // Селектор для получения состояния корзины
-export const selectCartItems = (state) => state.cart.items // Селектор для получения элементов корзины
+export const selectCartItems =(id) =>(state) => state.cart.items.find((obj) => obj.id === id) // Селектор для получения элементов корзины
 export const selectTotalPrice = (state) => state.cart.totalPrice // Селектор для получения общей цены корзины
 
 export const { addItem, removeItem, clearItems, removeItemCompletely } = cartSlice.actions

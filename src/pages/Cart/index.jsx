@@ -4,7 +4,7 @@ import CartItem from '../../components/cartItem'
 
 const Cart = () => {
   const dispatch = useDispatch()
-  const { items, totalPrice } = useSelector((state)=>selectCart(state)) || []
+  const { items, totalPrice } = useSelector(selectCart) || []
   const onClickClear = () => {
     if (window.confirm('Вы действительно хотите очистить корзину?')) {
       dispatch(clearItems())

@@ -1,12 +1,17 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { addItem, removeItem, selectCartItems, removeItemCompletely} from '../../redux/slices/cartSlice'
+import {
+  addItem,
+  removeItem,
+  selectCartItems,
+  removeItemCompletely,
+} from '../../redux/slices/cartSlice'
 
 const CartItem = ({ id, price, title, type, size, imageUrl }) => {
   const dispatch = useDispatch()
-  const { count } = useSelector((state) =>
-   selectCartItems(state).find((obj) => obj.id === id)
-  ) || { count: 0 }
+  const { count } = useSelector(selectCartItems(id) )|| {
+    count: 0,
+  }
 
   const onClickPlus = () => {
     dispatch(
@@ -23,8 +28,8 @@ const CartItem = ({ id, price, title, type, size, imageUrl }) => {
   const onClickMinus = () => {
     dispatch(removeItem(id))
   }
-  const onclickRemoveItem = ()=> {
-dispatch(removeItemCompletely(id))
+  const onclickRemoveItem = () => {
+    dispatch(removeItemCompletely(id))
   }
 
   return (

@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext, useCallback, useRef } from 'react'
 import {
+  selectFilter,
   setCategoryId,
   setCurrentPage,
   setFilters,
@@ -24,17 +25,16 @@ const Home = () => {
     sort: sortBy,
     search,
     currentPage,
-  } = useSelector((state) => state.filters)
+  } = useSelector(selectFilter)
   const dispatch = useDispatch()
   const { items } = useSelector((state) => state.pizza)
-  console.log(items)
 
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
   // Флаг для отслеживания поиска
   const isMounted = useRef(false) // Флаг для отслеживания монтирования компонента
   const isSearch = useRef(false) // Флаг для отслеживания поиска
-  console.log(categoryId)
+
   const onChangePAge = (number) => {
     dispatch(setCurrentPage(number))
   }
