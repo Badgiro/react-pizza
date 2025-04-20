@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { clearItems } from '../../redux/slices/cartSlice'
+import { clearItems, selectCart } from '../../redux/slices/cartSlice'
 import CartItem from '../../components/cartItem'
 
 const Cart = () => {
   const dispatch = useDispatch()
-  const { items, totalPrice } = useSelector((state) => state.cart) || []
+  const { items, totalPrice } = useSelector((state)=>selectCart(state)) || []
   const onClickClear = () => {
     if (window.confirm('Вы действительно хотите очистить корзину?')) {
       dispatch(clearItems())
@@ -93,7 +93,7 @@ const Cart = () => {
       >
         {items.length > 0
           ? items.map((item) => {
-              return <CartItem {...item} />
+              return <CartItem key={item.id} {...item} />
             })
           : 'not found any pizzas'}
       </div>

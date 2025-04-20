@@ -1,6 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+const PIZZAS_STATUS = {
+  IDLE: 'idle',
+  LOADING: 'loading',
+  SUCCEEDED: 'succeeded',
+  FAILED: 'failed',
+}
+
 export const fetchPizzas = createAsyncThunk(
   'pizzas/fetchPizzas',
   async ({ categoryId, currentPage, sortBy, search }, thunkAPI) => {
@@ -20,39 +27,43 @@ export const fetchPizzas = createAsyncThunk(
       )
       return response.data
     } catch (error) {
-      return thunkAPI.rejectWithValue('Ошибка при загрузке пицц')
+      return thunkAPI.rejectWithValue(
+        error.message || 'Ошибка при загрузке пицц'
+      )
     }
   }
 )
+
 const initialState = {
   items: [],
-  status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: PIZZAS_STATUS.IDLE,
   error: null,
-};
+}
 
 const pizzasSlice = createSlice({
-  name: 'pizza',
+  name: 'pizzas',
   initialState,
   reducers: {
     setItems: (state, action) => {
-      state.items = action.payload;
+      state.items = action.payload
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPizzas.pending, (state) => {
-        state.status = 'loading';
+        state.status = PIZZAS_STATUS.LOADING
+        state.error = null
       })
       .addCase(fetchPizzas.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = action.payload;
+        state.status = PIZZAS_STATUS.SUCCEEDED
+        state.items = action.payload
       })
       .addCase(fetchPizzas.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      });
+        state.status = PIZZAS_STATUS.FAILED
+        state.error = action.payload
+      })
   },
-});
+})
 
-export const { setItems } = pizzasSlice.actions;
-export default pizzasSlice.reducer;
+export const { setItems } = pizzasSlice.actions
+export default pizzasSlice.reducer

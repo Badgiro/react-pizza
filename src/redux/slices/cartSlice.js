@@ -35,6 +35,13 @@ export const cartSlice = createSlice({
         state.items = state.items.filter((item) => item.id !== action.payload)
       }
     },
+    removeItemCompletely(state, action) {
+      const itemToRemove = state.items.find((item) => item.id === action.payload)
+      if (itemToRemove) {
+        state.totalPrice -= itemToRemove.price * itemToRemove.count
+        state.items = state.items.filter((item) => item.id !== action.payload)
+      }
+    },
     clearItems(state) {
       state.items = []
       state.totalPrice = 0
@@ -45,6 +52,10 @@ export const cartSlice = createSlice({
   },
 })
 
-export const { addItem, removeItem, clearItems } = cartSlice.actions
+export const selectCart = (state) => state.cart // Селектор для получения состояния корзины
+export const selectCartItems = (state) => state.cart.items // Селектор для получения элементов корзины
+export const selectTotalPrice = (state) => state.cart.totalPrice // Селектор для получения общей цены корзины
+
+export const { addItem, removeItem, clearItems, removeItemCompletely } = cartSlice.actions
 
 export default cartSlice.reducer
